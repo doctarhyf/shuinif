@@ -49,6 +49,10 @@ function WordForm({
   }
 
   function onRemoveWord() {
+    if (!confirm("Are you sure you wanna delete this word?")) {
+      return;
+    }
+
     setloading(true);
     SBRemoveItem(
       word,
@@ -87,7 +91,10 @@ function WordForm({
     console.log(data);
 
     if (!(__(zh) && __(py) && __(def) && __(label) && __(tags))) {
-      console.warn("All values must be provided!");
+      const msg = "All values must be provided!";
+      console.warn(msg);
+      alert(msg);
+      setloading(false);
       return;
     }
 

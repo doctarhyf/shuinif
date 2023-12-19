@@ -65,6 +65,8 @@ export default function Dict({ toggleLoadingView }) {
   function onRequestReload() {
     setSelectedSection(SECTIONS.WORDS_LIST);
     loadWords();
+    setUpdatingSelectedWord(false);
+    setSelectedWord(words[0]);
   }
 
   function onSearchWord(search) {
