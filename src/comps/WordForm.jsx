@@ -5,6 +5,14 @@ import { __ } from "../helpers/funcs";
 import { SBInsertItem, SBRemoveItem, SBUpdateItemWithID } from "../db/sb";
 import LoadingScreen from "./LoadingScreen";
 
+const pinyinArray = {
+  a: ["ā", "á", "ǎ", "à"],
+  e: ["ē", "é", "ě", "è"],
+  i: ["ī", "í", "ǐ", "ì"],
+  o: ["ō", "ó", "ǒ", "ò"],
+  u: ["ū", "ú", "ǔ", "ù"],
+};
+
 function WordForm({
   word,
   updatingSelectedWord,
@@ -21,11 +29,14 @@ function WordForm({
   let ref_tags = useRef();
 
   const [loading, setloading] = useState(false);
+  const [showpykbd, setshowpykbd] = useState(false);
+  const [pyct, setpyct] = useState("");
 
   function onUpdateWord() {
     setloading(true);
     const data = {
       id: word.id,
+      zh: zh,
       py: _(ref_py),
       def: _(ref_def),
       label: _(ref_label),
@@ -118,6 +129,12 @@ function WordForm({
     return ref.current.value;
   };
 
+  function onInputFocus(e) {
+    const { name } = e.target;
+
+    setshowpykbd(name === "Pinyin");
+  }
+
   return (
     <div>
       <table>
@@ -153,10 +170,12 @@ function WordForm({
                   data[1]}
                 {(updatingSelectedWord || isNewWord) && data[0] !== "Tags" && (
                   <input
+                    name={data[0]}
                     ref={data[2]}
                     className="mx-1 border border-sky-200 px-1 rounded-md hover:border-sky-500 focus:border-sky-500 outline-none"
                     type="text"
                     defaultValue={data[1]}
+                    onFocus={onInputFocus}
                   />
                 )}
 
@@ -179,11 +198,13 @@ function WordForm({
                     <div>
                       <div>
                         <input
+                          name={data[0]}
                           className="mx-1 border border-sky-200 px-1 rounded-md hover:border-sky-500 focus:border-sky-500 outline-none"
                           type="text"
                           placeholder="Add new tag ..."
                           ref={ref_tags}
                           defaultValue={word.tags}
+                          onFocus={onInputFocus}
                         />
                       </div>
 
@@ -256,6 +277,30 @@ function WordForm({
         </tbody>
       </table>
       <LoadingScreen loading={loading} />
+      <div
+        className={` ${
+          showpykbd && "hidden"
+        } border-t border-teal-400 p-2 m-2 `}
+      >
+        <input
+          className="border rounded-md border-purple-500 outline-none p-1"
+          type="text"
+          value={pyct}
+          onChange={(e) => setpyct(e.target.value)}
+        />
+        {Object.values(pinyinArray).map((l, i) => (
+          <div>
+            {l.map((it, i) => (
+              <button
+                onClick={(e) => setpyct(it)}
+                className="kbd mx-1 my-1 hover:bg-sky-500 hover:text-white cursor-pointer"
+              >
+                {it}
+              </button>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
