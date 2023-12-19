@@ -36,7 +36,7 @@ function WordForm({
     setloading(true);
     const data = {
       id: word.id,
-      zh: zh,
+      zh: _(ref_zh),
       py: _(ref_py),
       def: _(ref_def),
       label: _(ref_label),
