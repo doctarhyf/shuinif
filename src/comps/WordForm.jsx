@@ -74,6 +74,7 @@ function WordForm({
     const py = _(ref_py);
     const def = _(ref_def);
     const label = _(ref_label);
+    const tags = _(ref_tags);
 
     const data = {
       zh: zh,

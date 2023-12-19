@@ -2,6 +2,7 @@
   "name": "shuinif",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://doctarhyf.github.io/shuinif/",
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",

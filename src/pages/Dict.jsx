@@ -62,6 +62,11 @@ export default function Dict({ toggleLoadingView }) {
     pages_count = words_count / words_per_page;
   }
 
+  function onRequestReload() {
+    setSelectedSection(SECTIONS.WORDS_LIST);
+    loadWords();
+  }
+
   function onSearchWord(search) {
     setloading(true);
     const lwsearch = search.toLowerCase();
@@ -74,15 +79,16 @@ export default function Dict({ toggleLoadingView }) {
     }
 
     let foundWords = words.filter((it, i) => {
-      const { zh, py, def, label } = it;
+      const { zh, py, def, label, tags } = it;
 
       const fzh = zh && zh.includes(search);
       const fpy = py && py.toLowerCase().includes(lwsearch);
       const fdef = def && def.toLowerCase().includes(lwsearch);
       const flabel = label && label.toLowerCase().includes(lwsearch);
+      const ftags = tags && tags.toLowerCase().includes(lwsearch);
 
       setloading(false);
-      return fzh || fpy || fdef || flabel;
+      return fzh || fpy || fdef || flabel || ftags;
     });
     setwordsf(foundWords);
     setloading(false);
@@ -146,7 +152,7 @@ export default function Dict({ toggleLoadingView }) {
             </div>
 
             <WordForm
-              onRequestReload={loadWords}
+              onRequestReload={onRequestReload}
               updatingSelectedWord={updatingSelectedWord}
               setUpdatingSelectedWord={setUpdatingSelectedWord}
               word={selectedWord}
@@ -157,7 +163,7 @@ export default function Dict({ toggleLoadingView }) {
 
       {selectedSection === SECTIONS.NEW_WORD && (
         <div>
-          <WordForm isNewWord onRequestReload={loadWords} />
+          <WordForm isNewWord onRequestReload={onRequestReload} />
           <button
             onClick={(e) => setSelectedSection(SECTIONS.WORDS_LIST)}
             className="btn btn-sm btn-error"
